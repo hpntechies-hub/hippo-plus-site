@@ -1,0 +1,917 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>Hippo+ — Your AI Fitness Buddy</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <meta name="description" content="Hippo+ is your AI-powered fitness buddy with workouts, nutrition, and group hubs to keep you on track." />
+
+  <!-- PWA / Hybrid app meta -->
+  <meta name="theme-color" content="#070014" />
+  <link rel="manifest" href="./manifest.webmanifest" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="Hippo+" />
+
+  <!-- Icons (update with your own files when ready) -->
+  <link rel="icon" type="image/png" sizes="32x32" href="./icons/icon-32.png" />
+  <link rel="apple-touch-icon" href="./icons/icon-192.png" />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg-1:#070014;
+      --bg-2:#10022a;
+      --bg-3:#02000b;
+      --neon:#7a30c8;
+      --neon-soft:#a855f7;
+      --accent:#5ee39a;
+      --card-border: rgba(148, 163, 184, 0.38);
+      --text-main:#f9f5ff;
+      --text-soft:#cbd5f5;
+    }
+    html,body { height: 100%; }
+    body {
+      font-family: "Poppins", system-ui, -apple-system, "SF Pro Display", sans-serif;
+      background:
+        radial-gradient(circle at 10% 5%, #7a30c8 0%, #050216 45%, #02000b 100%);
+      color: var(--text-main);
+      min-height: 100vh;
+    }
+
+    a { color: inherit; text-decoration: none; }
+    img { max-width: 100%; display: block; }
+
+    .page {
+      max-width: 1120px;
+      margin: 0 auto;
+      padding: 20px 16px 48px;
+    }
+
+    /* NAVBAR */
+    .nav {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 6px 0 18px;
+      position: relative;
+    }
+    .nav-left {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .logo-circle {
+      width: 38px;
+      height: 38px;
+      border-radius: 999px;
+      background: radial-gradient(circle at 30% 20%, #f97316 0%, #7a30c8 55%, #02000b 100%);
+      box-shadow:
+        0 0 28px rgba(122, 48, 200, 0.8),
+        0 0 50px rgba(94, 227, 154, 0.18);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+    }
+    .brand-title {
+      font-size: 19px;
+      font-weight: 600;
+      letter-spacing: 0.04em;
+    }
+    .brand-sub {
+      font-size: 11px;
+      color: var(--text-soft);
+    }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 18px;
+      font-size: 13px;
+      color: var(--text-soft);
+      transition: transform 0.2s ease-out, opacity 0.2s ease-out;
+    }
+    .nav-links a {
+      opacity: 0.9;
+      cursor: pointer;
+      position: relative;
+    }
+    .nav-links a::after {
+      content: "";
+      position: absolute;
+      left: 0;
+      bottom: -4px;
+      width: 0;
+      height: 2px;
+      border-radius: 999px;
+      background: linear-gradient(90deg, var(--accent), var(--neon-soft));
+      transition: width 0.20s ease-out;
+    }
+    .nav-links a:hover::after {
+      width: 100%;
+    }
+    .nav-cta {
+      padding: 7px 14px;
+      border-radius: 999px;
+      background: radial-gradient(circle at 10% 0, #5ee39a 0, #16a34a 40%, #052e16 100%);
+      color: #032314;
+      font-size: 12px;
+      font-weight: 600;
+      box-shadow:
+        0 0 26px rgba(94, 227, 154, 0.55),
+        0 0 36px rgba(22, 163, 74, 0.55);
+      border: none;
+      cursor: pointer;
+      transition: transform 0.12s ease-out, box-shadow 0.12s ease-out;
+    }
+    .nav-cta:hover {
+      transform: translateY(-1px) scale(1.03);
+      box-shadow:
+        0 0 36px rgba(94, 227, 154, 0.7),
+        0 0 50px rgba(22, 163, 74, 0.7);
+    }
+
+    /* MOBILE NAV TOGGLE */
+    .nav-toggle {
+      display: none;
+      border: 1px solid rgba(148,163,184,0.7);
+      background: rgba(15,23,42,0.9);
+      border-radius: 999px;
+      padding: 6px 10px;
+      color: var(--text-soft);
+      font-size: 16px;
+      cursor: pointer;
+    }
+
+    /* HERO */
+    .hero {
+      display: grid;
+      grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr);
+      gap: 26px;
+      align-items: center;
+      padding: 16px 0 40px;
+    }
+    .hero-kicker {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 4px 10px 4px 4px;
+      border-radius: 999px;
+      border: 1px solid rgba(94, 227, 154, 0.65);
+      background: radial-gradient(circle at 10% 0, rgba(94, 227, 154, 0.18), rgba(15, 23, 42, 0.9));
+      font-size: 11px;
+      color: var(--text-soft);
+      margin-bottom: 10px;
+    }
+    .dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 999px;
+      background: radial-gradient(circle, #a7f3d0 0, #22c55e 40%, #052e16 100%);
+      box-shadow: 0 0 16px rgba(74, 222, 128, 0.8);
+    }
+    .hero-title {
+      font-size: clamp(1.9rem, 3vw, 2.6rem);
+      font-weight: 700;
+      margin-bottom: 10px;
+      line-height: 1.15;
+    }
+    .hero-title span {
+      background: linear-gradient(120deg, #f97316, #facc15, #5ee39a);
+      -webkit-background-clip: text;
+      color: transparent;
+    }
+    .hero-sub {
+      font-size: 14px;
+      color: var(--text-soft);
+      max-width: 420px;
+      line-height: 1.5;
+      margin-bottom: 18px;
+    }
+    .hero-badges {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 18px;
+    }
+    .pill {
+      padding: 4px 9px;
+      border-radius: 999px;
+      border: 1px solid rgba(148, 163, 184, 0.5);
+      font-size: 11px;
+      color: var(--text-soft);
+      background: linear-gradient(120deg, rgba(15, 23, 42, 0.94), rgba(15, 23, 42, 0.7));
+    }
+    .hero-cta-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      align-items: center;
+      margin-bottom: 16px;
+    }
+    .btn-primary {
+      padding: 9px 20px;
+      border-radius: 999px;
+      border: none;
+      cursor: pointer;
+      font-size: 13px;
+      font-weight: 600;
+      background: radial-gradient(circle at 10% 0, #7a30c8 0, #4c1d95 40%, #020617 100%);
+      color: #f9f5ff;
+      box-shadow:
+        0 0 28px rgba(122, 48, 200, 0.85),
+        0 0 46px rgba(37, 99, 235, 0.45);
+      transition: transform 0.12s ease-out, box-shadow 0.12s ease-out;
+    }
+    .btn-primary:hover {
+      transform: translateY(-1px) scale(1.03);
+      box-shadow:
+        0 0 36px rgba(122, 48, 200, 1),
+        0 0 58px rgba(37, 99, 235, 0.65);
+    }
+    .btn-ghost {
+      padding: 8px 15px;
+      border-radius: 999px;
+      border: 1px solid rgba(148,163,184,0.7);
+      background: rgba(15,23,42,0.8);
+      color: var(--text-soft);
+      font-size: 12px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .btn-ghost span {
+      font-size: 15px;
+    }
+    .hero-mini {
+      font-size: 11px;
+      color: var(--text-soft);
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      opacity: 0.95;
+    }
+    .hero-mini strong {
+      color: #e5e7eb;
+    }
+
+    /* HERO PHONE MOCK */
+    .hero-right {
+      display: flex;
+      justify-content: center;
+    }
+    .phone-shell {
+      width: 260px;
+      border-radius: 36px;
+      padding: 10px;
+      background: radial-gradient(circle at 20% 0, rgba(248, 250, 252, 0.06), rgba(15, 23, 42, 0.96));
+      border: 1px solid rgba(148,163,184,0.45);
+      box-shadow:
+        0 18px 60px rgba(0,0,0,0.9),
+        0 0 45px rgba(37, 99, 235, 0.45),
+        0 0 60px rgba(122, 48, 200, 0.55);
+      position: relative;
+    }
+    .phone-screen {
+      border-radius: 26px;
+      padding: 14px 12px 16px;
+      background:
+        radial-gradient(circle at 10% 0, #7a30c8 0%, #020617 35%, #02000b 100%);
+      border: 1px solid rgba(148, 163, 184, 0.35);
+      position: relative;
+      overflow: hidden;
+    }
+    .phone-status {
+      font-size: 10px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 6px;
+    }
+    .phone-hippo-orb {
+      width: 72px;
+      height: 72px;
+      border-radius: 999px;
+      margin: 4px auto 10px;
+      background: transparent;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow:
+        0 0 45px rgba(122, 48, 200, 0.95),
+        0 0 65px rgba(94, 227, 154, 0.55);
+      overflow: hidden;
+    }
+    .phone-title {
+      text-align: center;
+      font-size: 14px;
+      font-weight: 600;
+      margin-bottom: 2px;
+    }
+    .phone-sub {
+      text-align: center;
+      font-size: 11px;
+      color: var(--text-soft);
+      margin-bottom: 10px;
+    }
+    .phone-row {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0,1fr));
+      gap: 6px;
+      margin-bottom: 10px;
+    }
+    .phone-metric {
+      border-radius: 12px;
+      padding: 6px 7px;
+      background: rgba(15,23,42,0.85);
+      border: 1px solid rgba(148,163,184,0.4);
+      font-size: 10px;
+    }
+    .phone-metric-label {
+      color: var(--text-soft);
+      margin-bottom: 2px;
+    }
+    .phone-metric-value {
+      font-size: 13px;
+      font-weight: 600;
+    }
+    .phone-chip-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 5px;
+      margin-bottom: 8px;
+    }
+    .phone-chip {
+      font-size: 9px;
+      padding: 3px 7px;
+      border-radius: 999px;
+      border: 1px solid rgba(148,163,184,0.55);
+      background: rgba(15,23,42,0.9);
+    }
+    .phone-footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 9px;
+      margin-top: 6px;
+      color: var(--text-soft);
+    }
+
+    /* SECTION WRAPPER */
+    section {
+      margin-bottom: 40px;
+    }
+    .section-label {
+      font-size: 11px;
+      letter-spacing: 0.16em;
+      color: var(--text-soft);
+      text-transform: uppercase;
+      margin-bottom: 8px;
+    }
+    .section-title {
+      font-size: 18px;
+      font-weight: 600;
+      margin-bottom: 12px;
+    }
+    .section-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 14px;
+    }
+    .card {
+      background: linear-gradient(140deg, rgba(15,23,42,0.95), rgba(15,23,42,0.8));
+      border-radius: 18px;
+      padding: 12px 12px 14px;
+      border: 1px solid var(--card-border);
+      box-shadow:
+        0 16px 40px rgba(0,0,0,0.65),
+        0 0 24px rgba(15,23,42,0.95);
+      font-size: 12px;
+    }
+    .card-icon {
+      width: 26px;
+      height: 26px;
+      border-radius: 999px;
+      background: radial-gradient(circle at 30% 20%, #7a30c8 0, #1d1035 50%, #020617 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+      margin-bottom: 6px;
+    }
+    .card-title {
+      font-size: 13px;
+      font-weight: 600;
+      margin-bottom: 4px;
+    }
+    .card-body {
+      color: var(--text-soft);
+      line-height: 1.4;
+    }
+
+    /* HOW IT WORKS */
+    .steps {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0,1fr));
+      gap: 10px;
+      font-size: 12px;
+    }
+    .step {
+      padding: 10px 11px;
+      border-radius: 16px;
+      border: 1px dashed rgba(148,163,184,0.7);
+      background: rgba(15,23,42,0.85);
+    }
+    .step-num {
+      font-size: 11px;
+      color: var(--accent);
+      font-weight: 600;
+      margin-bottom: 4px;
+    }
+    .step-title {
+      font-size: 13px;
+      font-weight: 600;
+      margin-bottom: 3px;
+    }
+    .step-body {
+      color: var(--text-soft);
+      line-height: 1.4;
+    }
+
+    /* PRICING / CTA */
+    .pricing {
+      display: grid;
+      grid-template-columns: minmax(0,1.2fr) minmax(0,0.8fr);
+      gap: 16px;
+      align-items: center;
+    }
+    .bullet-list {
+      list-style: none;
+      font-size: 12px;
+      color: var(--text-soft);
+    }
+    .bullet-list li {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 5px;
+    }
+    .bullet-dot {
+      margin-top: 4px;
+      width: 6px;
+      height: 6px;
+      border-radius: 999px;
+      background: linear-gradient(120deg, #5ee39a, #22c55e);
+      box-shadow: 0 0 12px rgba(94,227,154,0.7);
+    }
+    .pricing-card {
+      border-radius: 18px;
+      padding: 14px 14px 16px;
+      background: radial-gradient(circle at 10% 0, rgba(122,48,200,0.5), rgba(15,23,42,0.97));
+      border: 1px solid rgba(168,85,247,0.7);
+      box-shadow:
+        0 18px 45px rgba(0,0,0,0.85),
+        0 0 40px rgba(122,48,200,0.75);
+      font-size: 12px;
+    }
+    .pricing-tag {
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.18em;
+      color: #fef3c7;
+      margin-bottom: 4px;
+    }
+    .price {
+      font-size: 22px;
+      font-weight: 700;
+      margin-bottom: 4px;
+    }
+    .price span {
+      font-size: 11px;
+      font-weight: 400;
+      color: var(--text-soft);
+    }
+    .price-note {
+      font-size: 11px;
+      color: var(--text-soft);
+      margin-bottom: 8px;
+    }
+
+    /* FAQ */
+    .faq {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0,1fr));
+      gap: 10px;
+      font-size: 12px;
+    }
+    .faq-item {
+      border-radius: 16px;
+      padding: 10px 11px;
+      border: 1px solid rgba(148,163,184,0.55);
+      background: rgba(15,23,42,0.9);
+    }
+    .faq-q {
+      font-weight: 600;
+      margin-bottom: 3px;
+    }
+    .faq-a {
+      color: var(--text-soft);
+      line-height: 1.4;
+    }
+
+    /* FOOTER */
+    footer {
+      padding-top: 16px;
+      margin-top: 10px;
+      border-top: 1px solid rgba(51,65,85,0.9);
+      font-size: 11px;
+      color: var(--text-soft);
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .footer-links {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+    .footer-links a {
+      opacity: 0.88;
+    }
+
+    /* RESPONSIVE / HYBRID BEHAVIOUR */
+    @media (max-width: 880px) {
+      .hero {
+        grid-template-columns: minmax(0, 1fr);
+      }
+      .hero-right {
+        order: -1;
+        margin-bottom: 12px;
+      }
+      .phone-shell {
+        width: 230px;
+      }
+      .section-grid, .steps, .pricing, .faq {
+        grid-template-columns: minmax(0, 1fr);
+      }
+    }
+
+    /* Mobile nav: show hamburger, slide-down menu */
+    @media (max-width: 720px) {
+      .nav-links {
+        position: absolute;
+        top: 54px;
+        right: 0;
+        left: 0;
+        padding: 10px 14px 12px;
+        background: radial-gradient(circle at 10% 0, rgba(10,16,36,0.98), rgba(2,0,11,0.98));
+        border-radius: 18px;
+        border: 1px solid rgba(148,163,184,0.4);
+        flex-direction: column;
+        align-items: flex-start;
+        transform: translateY(-10px);
+        opacity: 0;
+        pointer-events: none;
+        z-index: 20;
+      }
+      body.nav-open .nav-links {
+        transform: translateY(0);
+        opacity: 1;
+        pointer-events: auto;
+      }
+      .nav-cta {
+        width: 100%;
+        justify-content: center;
+        text-align: center;
+      }
+      .nav-toggle {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="page">
+    <!-- NAVBAR -->
+    <header class="nav">
+      <div class="nav-left">
+        <div class="logo-circle" style="color:white; font-weight:700; font-size:16px; display:flex; align-items:center; justify-content:center;">
+  H+
+</div>
+
+        <div>
+          <div class="brand-title">Hippo+</div>
+          <div class="brand-sub">Your AI fitness buddy</div>
+        </div>
+      </div>
+
+      <!-- Mobile toggle -->
+      <button
+        class="nav-toggle"
+        aria-label="Toggle navigation"
+        onclick="document.body.classList.toggle('nav-open')">
+        ☰
+      </button>
+
+      <nav class="nav-links">
+        <a href="#features" onclick="document.body.classList.remove('nav-open')">Features</a>
+        <a href="#how" onclick="document.body.classList.remove('nav-open')">How it works</a>
+        <a href="#pricing" onclick="document.body.classList.remove('nav-open')">Pricing</a>
+        <a href="#faq" onclick="document.body.classList.remove('nav-open')">FAQ</a>
+        <button class="nav-cta"
+          onclick="document.getElementById('download').scrollIntoView({behavior:'smooth'});document.body.classList.remove('nav-open')">
+          Get Hippo+
+        </button>
+      </nav>
+    </header>
+
+    <!-- HERO -->
+    <main>
+      <section class="hero">
+        <div>
+          <div class="hero-kicker">
+            <div class="dot"></div>
+            Hippo+ • AI-powered fitness app
+          </div>
+          <h1 class="hero-title">
+            Turn your phone into a <span>fitness coach</span> that never skips a day.
+          </h1>
+          <p class="hero-sub">
+            Hippo+ combines AI coaching, smart workout & nutrition tracking, and a social hub
+            so you stay consistent — not just motivated for one week.
+          </p>
+
+          <div class="hero-badges">
+            <div class="pill">🧠 AI workout & food chat</div>
+            <div class="pill">📅 Daily & weekly progress</div>
+            <div class="pill">👥 Fit Friends Hub</div>
+          </div>
+
+          <div class="hero-cta-row" id="download">
+            <button class="btn-primary"
+              onclick="window.location.href='https://play.google.com/store/apps/details?id=com.appsomniacs.da2&pcampaignid=web_share'">
+              Get Hippo+ app
+            </button>
+            <button class="btn-ghost" onclick="document.getElementById('how').scrollIntoView({behavior:'smooth'})">
+              <span>▶</span> Watch overview
+            </button>
+          </div>
+          <div class="hero-mini">
+            <strong>Perfect for:</strong> Beginners, busy professionals, and anyone who wants consistent fitness habits.
+          </div>
+        </div>
+
+        <div class="hero-right">
+          <!-- Phone preview -->
+          <div class="phone-shell">
+            <div class="phone-screen">
+              <div class="phone-status">
+                <span>MON • 08:00</span>
+                <span>76% 🔋</span>
+              </div>
+            <div class="phone-hippo-orb" style="color:white; font-weight:700; font-size:20px; display:flex; align-items:center; justify-content:center;">
+  H+
+</div>
+
+              <div class="phone-title">Hey, I’m Hippo+</div>
+              <div class="phone-sub">You’re 2 workouts away from your weekly goal. Ready for today?</div>
+
+              <div class="phone-row">
+                <div class="phone-metric">
+                  <div class="phone-metric-label">Today kcal</div>
+                  <div class="phone-metric-value">420</div>
+                </div>
+                <div class="phone-metric">
+                  <div class="phone-metric-label">Active min</div>
+                  <div class="phone-metric-value">32</div>
+                </div>
+                <div class="phone-metric">
+                  <div class="phone-metric-label">Streak</div>
+                  <div class="phone-metric-value">7 days</div>
+                </div>
+              </div>
+
+              <div class="phone-chip-row">
+                <div class="phone-chip">💬 “Plan my workout”</div>
+                <div class="phone-chip">🍱 “Fix today’s meals”</div>
+                <div class="phone-chip">👥 “Check my hub”</div>
+              </div>
+
+              <div class="phone-footer">
+                <span>Next: 18 min full body</span>
+                <span>Start · Skip · Edit</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- FEATURES -->
+      <section id="features">
+        <div class="section-label">Features</div>
+        <h2 class="section-title">Everything you need to actually stay consistent</h2>
+        <div class="section-grid">
+          <article class="card">
+            <div class="card-icon">🧠</div>
+            <div class="card-title">AI fitness & food chat</div>
+            <div class="card-body">
+              Ask Hippo+ anything: “Make a 20-min home workout”, “Adjust my diet for 9pm dinners”,
+              or “Is this snack okay?” — it learns from your data over time.
+            </div>
+          </article>
+
+          <article class="card">
+            <div class="card-icon">📊</div>
+            <div class="card-title">Smart progress dashboard</div>
+            <div class="card-body">
+              See daily & weekly calories, active minutes, workouts, and session completion in a clean, neon dashboard
+              that feels like a game, not a spreadsheet.
+            </div>
+          </article>
+
+          <article class="card">
+            <div class="card-icon">🍱</div>
+            <div class="card-title">Food & micro tracking</div>
+            <div class="card-body">
+              Track meals quickly and get instant feedback like
+              “Your protein is low today — add one more serving at dinner.”
+            </div>
+          </article>
+
+          <article class="card">
+            <div class="card-icon">👥</div>
+            <div class="card-title">Fit Friends Hub</div>
+            <div class="card-body">
+              Join or create groups with friends. Share workouts,
+              post updates, and keep everyone accountable with streaks and challenges.
+            </div>
+          </article>
+
+          <article class="card">
+            <div class="card-icon">🎯</div>
+            <div class="card-title">Daily missions</div>
+            <div class="card-body">
+              Instead of vague goals, Hippo+ gives you 3–5 clear missions a day: workout, walk, hydrate,
+              and one “bonus” mission for extra streak power.
+            </div>
+          </article>
+
+          <!-- Replaced "Trainer friendly" with a generic feature -->
+          <article class="card">
+            <div class="card-icon">⏰</div>
+            <div class="card-title">Smart reminders</div>
+            <div class="card-body">
+              Gentle nudges at the right time of day so you don’t forget workouts, water, or steps —
+              without spamming your notifications.
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <!-- HOW IT WORKS -->
+      <section id="how">
+        <div class="section-label">How it works</div>
+        <h2 class="section-title">From download to “I’m actually consistent now”</h2>
+        <div class="steps">
+          <div class="step">
+            <div class="step-num">Step 1</div>
+            <div class="step-title">Set up your profile</div>
+            <div class="step-body">
+              Share your goals, current activity level, and how many days per week you want to move.
+              Hippo+ builds a realistic plan, not a fantasy one.
+            </div>
+          </div>
+          <div class="step">
+            <div class="step-num">Step 2</div>
+            <div class="step-title">Chat with Hippo AI</div>
+            <div class="step-body">
+              Ask for a workout, a day’s meal outline, or small habit tweaks.
+              Everything is personalized to your target weight and schedule.
+            </div>
+          </div>
+          <div class="step">
+            <div class="step-num">Step 3</div>
+            <div class="step-title">Track & celebrate progress</div>
+            <div class="step-body">
+              Complete sessions, watch your streak grow, and share wins in your Fit Friends Hub.
+              The app resets daily targets automatically so you start each day fresh.
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- PRICING / CTA -->
+      <section id="pricing">
+        <div class="section-label">Pricing</div>
+        <h2 class="section-title">Start free. Stay flexible.</h2>
+
+        <div class="pricing">
+          <div>
+            <ul class="bullet-list">
+              <li>
+                <div class="bullet-dot"></div>
+                <div>Start with a free version to explore workouts, AI chat, and tracking.</div>
+              </li>
+              <li>
+                <div class="bullet-dot"></div>
+                <div>Unlock more depth with an affordable monthly plan when you’re ready.</div>
+              </li>
+              <li>
+                <div class="bullet-dot"></div>
+                <div>No long-term lock-ins. Manage your plan inside the app anytime.</div>
+              </li>
+            </ul>
+          </div>
+
+          <aside class="pricing-card">
+            <div class="pricing-tag">Intro offer</div>
+            <div class="price">
+              ₹9 <span>• first month</span>
+            </div>
+            <p class="price-note">
+              Designed to be cheaper than one coffee a week while giving you a full fitness buddy in your pocket.
+            </p>
+            <button class="btn-primary" style="width:100%; margin-bottom:8px;"
+              onclick="window.location.href='https://play.google.com/store/apps/details?id=com.appsomniacs.da2&pcampaignid=web_share'">
+              Get started with Hippo+
+            </button>
+            <p style="font-size:11px; color:#fef9c3;">
+              Upgrade only when you feel Hippo+ is actually helping you stay consistent.
+            </p>
+          </aside>
+        </div>
+      </section>
+
+      <!-- FAQ -->
+      <section id="faq">
+        <div class="section-label">FAQ</div>
+        <h2 class="section-title">You might be wondering…</h2>
+        <div class="faq">
+          <div class="faq-item">
+            <div class="faq-q">Is Hippo+ only for advanced gym users?</div>
+            <div class="faq-a">
+              No. Hippo+ is especially friendly for beginners and busy people.
+              You can start with simple home workouts and slowly scale intensity.
+            </div>
+          </div>
+          <div class="faq-item">
+            <div class="faq-q">Do I need any special equipment?</div>
+            <div class="faq-a">
+              Not at all. You can start with just bodyweight. If you have dumbbells, resistance bands, or a gym membership,
+              Hippo+ will use them — but they’re optional.
+            </div>
+          </div>
+          <div class="faq-item">
+            <div class="faq-q">Is Hippo+ available on Android & iOS?</div>
+            <div class="faq-a">
+              Yes, Hippo+ is built for both Android and iOS devices. 
+              You can access it from your phone and keep your data synced.
+            </div>
+          </div>
+          <div class="faq-item">
+            <div class="faq-q">How does payment work?</div>
+            <div class="faq-a">
+              Hippo+ uses a simple subscription model with flexible monthly billing.
+              You’ll be able to manage or cancel your plan directly inside the app.
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <!-- FOOTER -->
+    <footer>
+      <div>© <span id="year"></span> Hippo+. All rights reserved.</div>
+      <div class="footer-links">
+        <a href="#" target="_blank" rel="noopener noreferrer">Privacy Policy</a>
+        <a href="#" target="_blank" rel="noopener noreferrer">Terms & Conditions</a>
+        <a href="#" target="_blank" rel="noopener noreferrer">Contact</a>
+      </div>
+    </footer>
+  </div>
+
+  <script>
+    // Set year automatically
+    document.getElementById('year').textContent = new Date().getFullYear();
+
+    // Register service worker (for PWA behaviour)
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', function () {
+        navigator.serviceWorker.register('./service-worker.js').catch(function (err) {
+          console.error('Service worker registration failed:', err);
+        });
+      });
+    }
+  </script>
+</body>
+</html>
