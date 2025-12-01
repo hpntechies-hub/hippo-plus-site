@@ -13,7 +13,7 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
   <meta name="apple-mobile-web-app-title" content="Hippo+" />
 
-  <!-- Icons (update with your own files when ready) -->
+  <!-- Icons -->
   <link rel="icon" type="image/png" sizes="32x32" href="./icons/icon-32.png" />
   <link rel="apple-touch-icon" href="./icons/icon-192.png" />
 
@@ -78,6 +78,10 @@
       justify-content: center;
       overflow: hidden;
     }
+    .logo-circle img {
+      width: 120%;
+      height: auto;
+    }
     .brand-title {
       font-size: 19px;
       font-weight: 600;
@@ -128,6 +132,9 @@
       border: none;
       cursor: pointer;
       transition: transform 0.12s ease-out, box-shadow 0.12s ease-out;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
     }
     .nav-cta:hover {
       transform: translateY(-1px) scale(1.03);
@@ -227,6 +234,9 @@
         0 0 28px rgba(122, 48, 200, 0.85),
         0 0 46px rgba(37, 99, 235, 0.45);
       transition: transform 0.12s ease-out, box-shadow 0.12s ease-out;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
     }
     .btn-primary:hover {
       transform: translateY(-1px) scale(1.03);
@@ -307,6 +317,10 @@
         0 0 45px rgba(122, 48, 200, 0.95),
         0 0 65px rgba(94, 227, 154, 0.55);
       overflow: hidden;
+    }
+    .phone-hippo-orb img {
+      width: 130%;
+      height: auto;
     }
     .phone-title {
       text-align: center;
@@ -602,13 +616,13 @@
 <body>
 
   <div class="page">
-<!-- NAVBAR -->
-<header class="nav">
-  <div class="nav-left">
-    <div class="logo-circle">
-      <img src="./logo.png" alt="Hippo+ logo" />
-    </div>
-
+    <!-- NAVBAR -->
+    <header class="nav">
+      <div class="nav-left">
+        <div class="logo-circle">
+          <!-- 3D Hippo logo -->
+          <img src="./logo.png" alt="Hippo+ logo" />
+        </div>
         <div>
           <div class="brand-title">Hippo+</div>
           <div class="brand-sub">Your AI fitness buddy</div>
@@ -628,10 +642,16 @@
         <a href="#how" onclick="document.body.classList.remove('nav-open')">How it works</a>
         <a href="#pricing" onclick="document.body.classList.remove('nav-open')">Pricing</a>
         <a href="#faq" onclick="document.body.classList.remove('nav-open')">FAQ</a>
-        <button class="nav-cta"
-          onclick="document.getElementById('download').scrollIntoView({behavior:'smooth'});document.body.classList.remove('nav-open')">
+        <!-- Nav CTA -> Play Store -->
+        <a
+          class="nav-cta"
+          href="https://play.google.com/store/apps/details?id=com.appsomniacs.da2&pcampaignid=web_share"
+          target="_blank"
+          rel="noopener noreferrer"
+          onclick="document.body.classList.remove('nav-open')"
+        >
           Get Hippo+
-        </button>
+        </a>
       </nav>
     </header>
 
@@ -658,10 +678,15 @@
           </div>
 
           <div class="hero-cta-row" id="download">
-            <button class="btn-primary"
-              onclick="window.location.href='https://play.google.com/store/apps/details?id=com.appsomniacs.da2&pcampaignid=web_share'">
+            <!-- Hero CTA -> Play Store -->
+            <a
+              class="btn-primary"
+              href="https://play.google.com/store/apps/details?id=com.appsomniacs.da2&pcampaignid=web_share"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
               Get Hippo+ app
-            </button>
+            </a>
             <button class="btn-ghost" onclick="document.getElementById('how').scrollIntoView({behavior:'smooth'})">
               <span>▶</span> Watch overview
             </button>
@@ -679,11 +704,10 @@
                 <span>MON • 08:00</span>
                 <span>76% 🔋</span>
               </div>
-            <div class="phone-hippo-orb" >
-              <img src="./logo.png" alt="Hippo+ logo" />
-
-</div>
-
+              <div class="phone-hippo-orb">
+                <!-- Same 3D hippo inside the phone -->
+                <img src="./logo.png" alt="Hippo+ logo" />
+              </div>
               <div class="phone-title">Hey, I’m Hippo+</div>
               <div class="phone-sub">You’re 2 workouts away from your weekly goal. Ready for today?</div>
 
@@ -767,7 +791,6 @@
             </div>
           </article>
 
-          <!-- Replaced "Trainer friendly" with a generic feature -->
           <article class="card">
             <div class="card-icon">⏰</div>
             <div class="card-title">Smart reminders</div>
@@ -842,10 +865,16 @@
             <p class="price-note">
               Designed to be cheaper than one coffee a week while giving you a full fitness buddy in your pocket.
             </p>
-            <button class="btn-primary" style="width:100%; margin-bottom:8px;"
-              onclick="window.location.href='https://play.google.com/store/apps/details?id=com.appsomniacs.da2&pcampaignid=web_share'">
+            <!-- Pricing CTA -> Play Store -->
+            <a
+              class="btn-primary"
+              style="width:100%; margin-bottom:8px;"
+              href="https://play.google.com/store/apps/details?id=com.appsomniacs.da2&pcampaignid=web_share"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
               Get started with Hippo+
-            </button>
+            </a>
             <p style="font-size:11px; color:#fef9c3;">
               Upgrade only when you feel Hippo+ is actually helping you stay consistent.
             </p>
@@ -875,7 +904,7 @@
           <div class="faq-item">
             <div class="faq-q">Is Hippo+ available on Android & iOS?</div>
             <div class="faq-a">
-              Yes, Hippo+ is built for both Android and iOS devices. 
+              Yes, Hippo+ is built for both Android and iOS devices.
               You can access it from your phone and keep your data synced.
             </div>
           </div>
@@ -916,5 +945,3 @@
   </script>
 </body>
 </html>
-
-
